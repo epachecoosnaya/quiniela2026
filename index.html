@@ -25,7 +25,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:repeating-linear-gradient(135deg,transparent,transparent 60px,rgba(0,61,165,.012) 60px,rgba(0,61,165,.012) 61px);}
 
 /* ──────── LOADING ──────── */
-#ls{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+#ls{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .4s ease;}
+#ls.fade{opacity:0;pointer-events:none;}
 .ls-logo{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:6px;background:linear-gradient(135deg,var(--red),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--red);border-right-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -2653,6 +2654,19 @@ document.addEventListener('change',function(e){
     toggleTriviaConfigUI(e.target.value);
   }
 });
+
+// ── INIT ──
+// Ocultar pantalla de carga con fade y mostrar landing
+function hideLs(){
+  var lsEl=document.getElementById('ls');
+  if(!lsEl)return;
+  lsEl.classList.add('fade');
+  setTimeout(function(){lsEl.style.display='none';},420);
+}
+// Timeout de seguridad — si algo falla, la app igual aparece en 3s
+setTimeout(hideLs,3000);
+// Ocultar inmediatamente si todo cargó bien
+hideLs();
 document.getElementById('s-landing').style.display='flex';
 document.getElementById('s-landing').classList.add('active');
 renderLanding();
