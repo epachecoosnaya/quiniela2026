@@ -388,7 +388,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 <div id="s-app" class="screen">
   <nav class="nav">
     <div class="nav-logo" onclick="goLanding()">&#x26BD; Q26</div>
-    <button class="ntab on" onclick="showTab('partidos',this)">Fixture</button>
+    <button class="ntab on" onclick="showTab('partidos',this)">Partidos</button>
     <button class="ntab" onclick="showTab('ko',this)">Eliminatorias</button>
     <button class="ntab" onclick="showTab('especiales',this)">Especiales</button>
     <button class="ntab" onclick="showTab('miq',this)">Mi Quiniela</button>
@@ -404,8 +404,8 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   <!-- FIXTURE -->
   <div id="t-partidos" class="tab on">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-      <div><div class="sh-title">FIXTURE GRUPOS</div><div class="sh-sub">Horarios Ciudad de M&eacute;xico (CT)</div></div>
-      <button onclick="fetchLiveScores()" style="padding:6px 11px;background:var(--reddim);border:1px solid rgba(200,16,46,.3);border-radius:4px;color:#ff6b6b;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;">&#x21BB; LIVE</button>
+      <div><div class="sh-title">PARTIDOS DE GRUPOS</div><div class="sh-sub">Horarios Ciudad de M&eacute;xico (CT) &middot; Toca el estadio para m&aacute;s info</div></div>
+      <button onclick="fetchLiveScores()" style="padding:6px 11px;background:var(--reddim);border:1px solid rgba(200,16,46,.3);border-radius:4px;color:#ff6b6b;font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:1px;cursor:pointer;">&#x21BB; ACTUALIZAR</button>
     </div>
     <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
     <div class="prog-lbl" id="plbl">0 / 72</div>
@@ -491,12 +491,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 
     <div class="apanel">
       <div class="apanel-title">&#x1F4F6; API MARCADORES AUTO</div>
-      <div style="font-size:12px;color:var(--dim);margin-bottom:8px">Tu API key de <b style="color:var(--gold)">wc2026api.com</b></div>
+      <div style="font-size:12px;color:var(--dim);margin-bottom:8px">Clave API de <b style="color:var(--gold)">wc2026api.com</b> para resultados autom&aacute;ticos</div>
       <div class="api-row">
         <input id="api-key-inp" class="api-inp" type="text" placeholder="wc26_...">
         <button class="api-btn" onclick="saveApiKey()">GUARDAR</button>
       </div>
-      <button onclick="fetchAndSaveResults()" class="api-btn" style="width:100%;padding:9px;margin-top:4px">&#x21BB; ACTUALIZAR MARCADORES AHORA</button>
+      <button onclick="fetchAndSaveResults()" class="api-btn" style="width:100%;padding:9px;margin-top:4px">&#x21BB; ACTUALIZAR RESULTADOS AHORA</button>
     </div>
 
     <div class="stats-grid" id="a-stats"></div>
@@ -592,6 +592,113 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════
+     TUTORIAL INTERACTIVO
+═══════════════════════════════════════ -->
+<style>
+/* Overlay oscuro con hueco para el elemento resaltado */
+#tour-overlay{display:none;position:fixed;inset:0;z-index:800;pointer-events:none;}
+#tour-overlay.active{display:block;}
+.tour-hole{position:absolute;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,10,.82);transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+
+/* Tooltip del tour */
+#tour-tooltip{display:none;position:fixed;z-index:801;width:290px;
+  background:linear-gradient(135deg,#0e1e32,#06121f);
+  border:1px solid var(--border2);border-radius:12px;
+  box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(0,61,165,.2);
+  transition:all .3s cubic-bezier(.4,0,.2,1);}
+#tour-tooltip.active{display:block;}
+#tour-tooltip::before{content:'';position:absolute;width:14px;height:14px;
+  background:#0e1e32;border:1px solid var(--border2);
+  transform:rotate(45deg);z-index:-1;}
+#tour-tooltip.arr-top::before{bottom:-8px;left:50%;transform:translateX(-50%) rotate(45deg);border-top:none;border-left:none;}
+#tour-tooltip.arr-bottom::before{top:-8px;left:50%;transform:translateX(-50%) rotate(45deg);border-bottom:none;border-right:none;}
+#tour-tooltip.arr-left::before{right:-8px;top:50%;transform:translateY(-50%) rotate(45deg);border-bottom:none;border-left:none;}
+#tour-tooltip.arr-right::before{left:-8px;top:50%;transform:translateY(-50%) rotate(45deg);border-top:none;border-right:none;}
+
+.tt-header{background:linear-gradient(135deg,var(--red),var(--blue));border-radius:11px 11px 0 0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+.tt-step{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:3px;color:rgba(255,255,255,.7);}
+.tt-skip{font-size:11px;color:rgba(255,255,255,.6);cursor:pointer;background:none;border:none;letter-spacing:1px;text-transform:uppercase;}
+.tt-skip:hover{color:var(--white);}
+.tt-body{padding:14px;}
+.tt-icon{font-size:28px;margin-bottom:8px;}
+.tt-title{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:var(--white);margin-bottom:6px;line-height:1.2;}
+.tt-text{font-size:13px;color:var(--dim);line-height:1.6;}
+.tt-tip{margin-top:8px;padding:7px 10px;background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:6px;font-size:12px;color:var(--gold);}
+.tt-footer{padding:10px 14px 14px;display:flex;align-items:center;gap:8px;}
+.tt-prev{padding:8px 14px;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:5px;color:var(--dim);font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:1px;}
+.tt-prev:hover{border-color:var(--border2);color:var(--text);}
+.tt-next{flex:1;padding:9px;background:linear-gradient(135deg,var(--red),var(--blue));border:none;border-radius:5px;color:var(--white);font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;}
+.tt-next:hover{filter:brightness(1.1);}
+.tt-dots{display:flex;gap:5px;margin:0 auto;}
+.tt-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:background .2s;}
+.tt-dot.active{background:var(--gold);}
+.tt-progress{height:2px;background:var(--border);margin:0 14px;border-radius:2px;}
+.tt-prog-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--blue));border-radius:2px;transition:width .35s;}
+
+/* Pantalla de selección de rol */
+#tour-role-screen{display:none;position:fixed;inset:0;z-index:850;background:rgba(0,0,8,.92);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;}
+#tour-role-screen.open{display:flex;}
+.trs-box{background:linear-gradient(135deg,#0a1625,#060e1a);border:1px solid var(--border2);border-radius:14px;padding:28px 20px;width:100%;max-width:380px;text-align:center;}
+.trs-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--white);margin-bottom:6px;}
+.trs-sub{font-size:13px;color:var(--dim);margin-bottom:24px;line-height:1.5;}
+.trs-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.trs-card{padding:20px 12px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;}
+.trs-card:hover{transform:translateY(-3px);}
+.trs-card.jugador:hover{border-color:var(--blue);background:rgba(0,61,165,.1);}
+.trs-card.admin:hover{border-color:var(--gold);background:rgba(245,166,35,.08);}
+.trs-card-icon{font-size:36px;margin-bottom:10px;}
+.trs-card-title{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.trs-card-desc{font-size:11px;color:var(--dim);line-height:1.4;}
+.trs-skip{font-size:12px;color:var(--muted);cursor:pointer;letter-spacing:1px;text-decoration:underline;text-underline-offset:3px;}
+.trs-skip:hover{color:var(--dim);}
+</style>
+
+<!-- Overlay de tour -->
+<div id="tour-overlay"><div class="tour-hole" id="tour-hole"></div></div>
+
+<!-- Tooltip -->
+<div id="tour-tooltip">
+  <div class="tt-header">
+    <div class="tt-step" id="tt-step-lbl">PASO 1 DE 8</div>
+    <button class="tt-skip" onclick="endTour()">SALTAR TOUR</button>
+  </div>
+  <div class="tt-progress"><div class="tt-prog-fill" id="tt-prog-fill" style="width:0%"></div></div>
+  <div class="tt-body">
+    <div class="tt-icon" id="tt-icon"></div>
+    <div class="tt-title" id="tt-title"></div>
+    <div class="tt-text" id="tt-text"></div>
+    <div class="tt-tip" id="tt-tip" style="display:none"></div>
+  </div>
+  <div class="tt-footer">
+    <button class="tt-prev" id="tt-prev" onclick="tourPrev()">&#x2190;</button>
+    <div class="tt-dots" id="tt-dots"></div>
+    <button class="tt-next" id="tt-next" onclick="tourNext()">SIGUIENTE &#x2192;</button>
+  </div>
+</div>
+
+<!-- Pantalla de selección de rol -->
+<div id="tour-role-screen">
+  <div class="trs-box">
+    <div style="font-size:48px;margin-bottom:12px">🏆</div>
+    <div class="trs-title">¡BIENVENIDO!</div>
+    <div class="trs-sub">Es tu primera vez en la quiniela.<br>¿Cuál es tu rol en este grupo?</div>
+    <div class="trs-cards">
+      <div class="trs-card jugador" onclick="startTour('jugador')">
+        <div class="trs-card-icon">⚽</div>
+        <div class="trs-card-title">SOY JUGADOR</div>
+        <div class="trs-card-desc">Me uní a un grupo para predecir partidos y ganar puntos</div>
+      </div>
+      <div class="trs-card admin" onclick="startTour('admin')">
+        <div class="trs-card-icon">🔧</div>
+        <div class="trs-card-title">SOY ADMIN</div>
+        <div class="trs-card-desc">Yo creé el grupo y lo voy a administrar</div>
+      </div>
+    </div>
+    <div class="trs-skip" onclick="skipTour()">Ya sé cómo funciona, saltar</div>
+  </div>
+</div>
 
 <script>
 // ══════════════════════════════════
@@ -811,7 +918,42 @@ var TRIVIA = [
 // STATE
 // ══════════════════════════════════
 var CC='', CP='', isAdmin=false, GD={}, unsub=null, collapsed={};
-var triviaTimer=null, triviaAnswered=false, triviaLastShown=0;
+var triviaInterval=null, triviaCountdown=5, triviaActive=false, triviaAnswered=false;
+
+// ══════════════════════════════════
+// ALGORITMO DE CRÉDITOS DE TRIVIA
+// Se desbloquean por eventos REALES del torneo:
+//   +1 crédito por cada partido terminado
+//   +1 crédito extra si el partido tuvo 3+ goles (partido goleador)
+//   +3 créditos al comenzar cada fase eliminatoria
+//   Máximo acumulable: 3 créditos sin usar
+// ══════════════════════════════════
+function getTriviaCredits(){
+  var results=GD.results||{};
+  var partidos=Object.keys(results).length;
+  var emocionantes=Object.values(results).filter(function(r){
+    return (r.h||0)+(r.a||0)>=3;
+  }).length;
+  var koResults=GD.koResults||{};
+  var fasesBono=0;
+  [0,1,2,3].forEach(function(ri){
+    var hayResultados=KO_ROUNDS[ri].matches.some(function(m){return koResults[m.id+'_winner'];});
+    if(hayResultados)fasesBono+=3;
+  });
+  var totalGenerados=partidos+emocionantes+fasesBono;
+  var usados=parseInt(localStorage.getItem('trivia_usados_'+CC+'_'+CP)||'0');
+  return Math.max(0,Math.min(totalGenerados-usados,3));
+}
+
+function actualizarBotonTrivia(){
+  var fab=document.getElementById('trivia-fab');
+  if(!CC){fab.classList.remove('visible');return;}
+  var creditos=getTriviaCredits();
+  fab.classList.toggle('visible',creditos>0);
+  // mostrar contador en el botón
+  fab.innerHTML=creditos>0?('&#x2753;<span style="position:absolute;top:-4px;right:-4px;background:var(--gold);color:#000;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:Oswald,sans-serif">'+creditos+'</span>'):'&#x2753;';
+  fab.style.position='fixed';
+}
 
 // ══════════════════════════════════
 // HELPERS
@@ -898,6 +1040,7 @@ function enterGroup(code,player,adminMode){
     GD=snap.val();sync('ok');
     document.getElementById('npill').innerHTML='<b>'+GD.name+'</b> · '+player;
     renderMatches();loadSpecials();updateLockBtn();
+    actualizarBotonTrivia();
     var at=document.querySelector('.tab.on');
     if(at){
       if(at.id==='t-tabla')renderLB();
@@ -907,8 +1050,13 @@ function enterGroup(code,player,adminMode){
     }
   });
   showTab('partidos',document.querySelector('.ntab'));
-  // Show trivia FAB after 30s
-  setTimeout(function(){scheduleTriviaReminder();},30000);
+  // Actualizar botón trivia según créditos disponibles
+  setTimeout(function(){actualizarBotonTrivia();},1000);
+  // Tour de primera vez
+  checkFirstTime();
+  // Mostrar botón ayuda
+  var hb=document.getElementById('help-btn');
+  if(hb)hb.style.display='block';
 }
 function goLanding(){
   if(unsub){db.ref('groups/'+CC).off('value',unsub);unsub=null;}
@@ -1438,28 +1586,32 @@ function fetchLiveScores(){fetchAndSaveResults();}
 var triviaInterval=null,triviaCountdown=5,triviaActive=false;
 
 function scheduleTriviaReminder(){
-  // Show FAB as pulsing after 30s, repeat every 30min
-  var lastAnswered=parseInt(localStorage.getItem('trivia_last')||'0');
-  var now=Date.now();
-  if(now-lastAnswered>1800000||lastAnswered===0){ // 30 min cooldown
-    document.getElementById('trivia-fab').classList.add('visible');
-  }
+  actualizarBotonTrivia();
 }
 
 function openTrivia(){
   if(triviaActive)return;
-  // pick random unanswered question
-  var answered=JSON.parse(localStorage.getItem('trivia_answered_'+CC+'_'+CP)||'[]');
-  var unanswered=TRIVIA.map(function(q,i){return i;}).filter(function(i){return !answered.includes(i);});
-  if(!unanswered.length){
-    localStorage.removeItem('trivia_answered_'+CC+'_'+CP);// reset if all answered
-    unanswered=TRIVIA.map(function(q,i){return i;});
+  var creditos=getTriviaCredits();
+  if(creditos<=0){
+    toast('Aún no hay trivias disponibles. ¡Espera a que se jueguen más partidos!','info');
+    return;
   }
-  var idx=unanswered[Math.floor(Math.random()*unanswered.length)];
+  var usados=parseInt(localStorage.getItem('trivia_usados_'+CC+'_'+CP)||'0');
+  var respondidas=JSON.parse(localStorage.getItem('trivia_resp_'+CC+'_'+CP)||'[]');
+  var disponibles=TRIVIA.map(function(q,i){return i;}).filter(function(i){return !respondidas.includes(i);});
+  if(!disponibles.length){
+    localStorage.removeItem('trivia_resp_'+CC+'_'+CP);
+    disponibles=TRIVIA.map(function(q,i){return i;});
+  }
+  var idx=disponibles[Math.floor(Math.random()*disponibles.length)];
   var q=TRIVIA[idx];
   triviaActive=true;
   triviaAnswered=false;
   triviaCountdown=5;
+  // consumir 1 crédito
+  localStorage.setItem('trivia_usados_'+CC+'_'+CP,String(usados+1));
+  actualizarBotonTrivia();
+
   document.getElementById('trivia-q').textContent=q.q;
   var optsEl=document.getElementById('trivia-opts');
   optsEl.innerHTML='';
@@ -1467,15 +1619,19 @@ function openTrivia(){
     var btn=document.createElement('button');
     btn.className='trivia-opt';
     btn.textContent=opt;
-    btn.onclick=function(){answerTrivia(idx,i,q.a,btn,optsEl);};
+    btn.onclick=function(){answerTrivia(idx,i,q.a,optsEl);};
     optsEl.appendChild(btn);
   });
+  var credRestantes=getTriviaCredits();
   document.getElementById('trivia-result').style.display='none';
   document.getElementById('trivia-timer').textContent='5';
   document.getElementById('trivia-timer').className='trivia-timer';
+  document.getElementById('trivia-timer').style.display='';
   document.getElementById('trivia-bar').style.width='100%';
+  // créditos restantes en header
+  document.querySelector('.trivia-badge').innerHTML='&#x1F9E0; TRIVIA &nbsp;<span style="font-size:11px;color:var(--dim)">'+credRestantes+' cr&eacute;dito'+(credRestantes!==1?'s':'')+' restante'+(credRestantes!==1?'s':'')+'</span>';
   document.getElementById('trivia-modal').classList.add('open');
-  // countdown
+
   triviaInterval=setInterval(function(){
     triviaCountdown--;
     document.getElementById('trivia-timer').textContent=triviaCountdown;
@@ -1484,22 +1640,21 @@ function openTrivia(){
     if(triviaCountdown<=0){
       clearInterval(triviaInterval);
       if(!triviaAnswered){
-        // time out - mark wrong
         optsEl.querySelectorAll('.trivia-opt').forEach(function(b,i){
           b.classList.add('disabled');
           if(i===q.a)b.classList.add('correct');
         });
         var resEl=document.getElementById('trivia-result');
-        resEl.textContent='⏱ Tiempo agotado. Era: '+q.opts[q.a];
+        resEl.textContent='\u23F1 Tiempo agotado. Era: '+q.opts[q.a];
         resEl.className='trivia-result tr-lose';
         resEl.style.display='block';
-        markTriviaAnswered(idx);
+        marcarRespondida(idx);
       }
     }
   },1000);
 }
 
-function answerTrivia(qIdx,chosen,correct,btnEl,optsEl){
+function answerTrivia(qIdx,chosen,correct,optsEl){
   if(triviaAnswered)return;
   triviaAnswered=true;
   clearInterval(triviaInterval);
@@ -1510,25 +1665,25 @@ function answerTrivia(qIdx,chosen,correct,btnEl,optsEl){
   });
   var resEl=document.getElementById('trivia-result');
   if(chosen===correct){
-    resEl.textContent='🎯 ¡Correcto! +0.5 pts';
+    resEl.textContent='\uD83C\uDFAF \xA1Correcto! +0.5 pts';
     resEl.className='trivia-result tr-win';
     var curPts=(GD.players&&GD.players[CP]&&GD.players[CP].triviaPoints)||0;
     db.ref('groups/'+CC+'/players/'+CP).update({triviaPoints:parseFloat((curPts+0.5).toFixed(1))});
+    toast('+0.5 puntos de trivia \u2713','ok');
   } else {
-    resEl.textContent='❌ Incorrecto. Era: '+TRIVIA[qIdx].opts[correct];
+    resEl.textContent='\u274C Incorrecto. La respuesta era: '+TRIVIA[qIdx].opts[correct];
     resEl.className='trivia-result tr-lose';
   }
   resEl.style.display='block';
   document.getElementById('trivia-timer').style.display='none';
-  markTriviaAnswered(qIdx);
-  localStorage.setItem('trivia_last',Date.now().toString());
+  marcarRespondida(qIdx);
 }
 
-function markTriviaAnswered(idx){
-  var key='trivia_answered_'+CC+'_'+CP;
-  var answered=JSON.parse(localStorage.getItem(key)||'[]');
-  if(!answered.includes(idx))answered.push(idx);
-  localStorage.setItem(key,JSON.stringify(answered));
+function marcarRespondida(idx){
+  var key='trivia_resp_'+CC+'_'+CP;
+  var respondidas=JSON.parse(localStorage.getItem(key)||'[]');
+  if(!respondidas.includes(idx))respondidas.push(idx);
+  localStorage.setItem(key,JSON.stringify(respondidas));
 }
 
 function closeTrivia(){
@@ -1536,8 +1691,7 @@ function closeTrivia(){
   triviaActive=false;
   document.getElementById('trivia-modal').classList.remove('open');
   document.getElementById('trivia-timer').style.display='';
-  // schedule next
-  setTimeout(scheduleTriviaReminder,1800000);// next in 30min
+  actualizarBotonTrivia();
 }
 
 // ══════════════════════════════════
@@ -1608,13 +1762,371 @@ function toast(msg,type){
   clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},3500);
 }
 
+
 // ══════════════════════════════════
-// INIT
+// TOUR INTERACTIVO
 // ══════════════════════════════════
+var TOUR_STEPS = {
+  jugador: [
+    {
+      target: null, // pantalla completa (sin highlight)
+      pos: 'center',
+      icon: '⚽',
+      title: '¡Bienvenido a la Quiniela!',
+      text: 'Este tour rápido te explica cómo jugar, ganar puntos y competir con tus amigos del grupo.',
+      tip: '💡 El tour tarda menos de 2 minutos.'
+    },
+    {
+      target: '#t-partidos',
+      pos: 'bottom',
+      tab: 'partidos',
+      icon: '📋',
+      title: 'Pestaña Partidos',
+      text: 'Aquí están todos los 72 partidos de la fase de grupos ordenados por fecha y hora (horario Ciudad de México).',
+      tip: '💡 Toca el nombre del estadio para ver información de ese recinto.'
+    },
+    {
+      target: '#mc-container .mc:first-child',
+      pos: 'bottom',
+      tab: 'partidos',
+      icon: '🎯',
+      title: 'Cómo predecir un marcador',
+      text: 'Escribe el marcador que crees que terminará cada partido. El número izquierdo es el equipo local, el derecho el visitante.\n\nEjemplo: México 2 - 1 Sudáfrica',
+      tip: '⚠️ Las predicciones se bloquean automáticamente cuando el partido comienza. ¡No dejes para después!'
+    },
+    {
+      target: '#save-btn',
+      pos: 'top',
+      tab: 'partidos',
+      icon: '💾',
+      title: 'Guarda tus predicciones',
+      text: 'Después de llenar tus marcadores, toca este botón para guardarlos. Los datos se sincronizan en tiempo real con todos en el grupo.',
+      tip: '💡 Puedes guardar parcialmente y regresar después a completar más partidos.'
+    },
+    {
+      target: 'button[onclick="showTab(\'ko\',this)"]',
+      pos: 'bottom',
+      tab: 'ko',
+      icon: '🏆',
+      title: 'Eliminatorias',
+      text: 'Una vez que termina la fase de grupos, aparecen aquí los partidos de Ronda de 32, Octavos, Cuartos, Semifinales y Final.\n\nPredice quién avanza en cada partido.',
+      tip: '💡 Cada fase vale más puntos: desde 2 pts en Ronda de 32 hasta 8 pts por acertar la Final.'
+    },
+    {
+      target: 'button[onclick="showTab(\'especiales\',this)"]',
+      pos: 'bottom',
+      tab: 'especiales',
+      icon: '🌟',
+      title: 'Predicciones Especiales',
+      text: 'Antes de que comience el torneo, predice:\n\n🏆 Campeón (+10 pts)\n👟 Goleador (+8 pts)\n🥈 Subcampeón (+5 pts)\n💥 Sorpresa en Semis (+5 pts)',
+      tip: '⚠️ Estas predicciones también se bloquean al inicio del torneo. ¡Llénalas cuanto antes!'
+    },
+    {
+      target: '#trivia-fab',
+      pos: 'left',
+      icon: '🧠',
+      title: 'Botón de Trivia ❓',
+      text: 'Este botón aparece con un número dorado cuando tienes preguntas de trivia disponibles.\n\nSe desbloquean conforme se juegan partidos: +1 por partido terminado, +1 extra si hubo 3 o más goles.',
+      tip: '💡 Tienes 5 segundos para responder. ¡Cada acierto suma 0.5 pts!'
+    },
+    {
+      target: 'button[onclick="showTab(\'tabla\',this)"]',
+      pos: 'bottom',
+      tab: 'tabla',
+      icon: '📊',
+      title: 'Tabla de posiciones',
+      text: 'Aquí ves la clasificación en tiempo real de todos los jugadores del grupo.\n\nDesde aquí también puedes compartir tu posición por WhatsApp.',
+      tip: '🏆 El que más puntos tenga el 19 de julio ¡gana!'
+    },
+    {
+      target: 'button[onclick="showTab(\'miq\',this)"]',
+      pos: 'bottom',
+      tab: 'miq',
+      icon: '👤',
+      title: 'Mi Quiniela',
+      text: 'Tu resumen personal: puntos totales, posición, desglose por categoría y un historial de tus últimas predicciones vs resultados reales.',
+      tip: null
+    },
+    {
+      target: null,
+      pos: 'center',
+      icon: '🎉',
+      title: '¡Listo para jugar!',
+      text: 'Ya sabes todo lo necesario. Recuerda:\n\n1. Llena tus predicciones de grupos\n2. Llena tus especiales\n3. Sigue la trivia para sumar puntos extra\n4. Predice en eliminatorias cuando avance el torneo\n\n¡Buena suerte! 🏆',
+      tip: null
+    }
+  ],
+  admin: [
+    {
+      target: null,
+      pos: 'center',
+      icon: '🔧',
+      title: 'Tour del Administrador',
+      text: 'Como admin tienes poderes especiales: ingresar resultados, manejar los equipos clasificados, bloquear predicciones y más.\n\nEste tour te explica todo.',
+      tip: null
+    },
+    {
+      target: 'button[onclick="showTab(\'admin\',this)"]',
+      pos: 'bottom',
+      tab: 'admin',
+      icon: '⚙️',
+      title: 'Panel de Administrador',
+      text: 'Esta pestaña solo la ves tú. Desde aquí controlas todo el grupo.',
+      tip: '💡 Nadie más puede ver ni acceder a este panel.'
+    },
+    {
+      target: '.invite-box',
+      pos: 'bottom',
+      tab: 'admin',
+      icon: '📤',
+      title: 'Código de invitación',
+      text: 'Este es el código único de tu grupo. Toca "COPIAR PARA WHATSAPP" y se genera un mensaje listo para mandar.\n\nTus amigos entran a la app, tocan UNIRSE y escriben este código.',
+      tip: '💡 Puedes crear múltiples grupos (trabajo, primos, amigos) cada uno con su código propio.'
+    },
+    {
+      target: '.api-row',
+      pos: 'bottom',
+      tab: 'admin',
+      icon: '📡',
+      title: 'API de resultados automáticos',
+      text: 'Ingresa tu clave de wc2026api.com para que los resultados se actualicen solos al terminar cada partido.\n\nToca "ACTUALIZAR RESULTADOS AHORA" para obtener los últimos marcadores.',
+      tip: '💡 Si no tienes la API, también puedes ingresar los resultados manualmente en la sección de abajo.'
+    },
+    {
+      target: '#a-matches',
+      pos: 'top',
+      tab: 'admin',
+      icon: '⚽',
+      title: 'Ingresar resultados manualmente',
+      text: 'Para cada partido, escribe el marcador final y toca OK.\n\nLos puntos de TODOS los jugadores se recalculan al instante y la tabla se actualiza en sus celulares.',
+      tip: '⚠️ Solo ingresa el marcador FINAL del partido (después de los 90 min o tiempo extra).'
+    },
+    {
+      target: '#admin-ko-teams',
+      pos: 'top',
+      tab: 'admin',
+      icon: '🏆',
+      title: 'Equipos clasificados en eliminatorias',
+      text: 'Cuando termine la fase de grupos, llena aquí los equipos que clasificaron a cada partido de la Ronda de 32.\n\nEsto activa las predicciones de eliminatorias para todos los jugadores.',
+      tip: '💡 La API los llena automáticamente si la tienes configurada.'
+    },
+    {
+      target: '#lock-btn',
+      pos: 'top',
+      tab: 'admin',
+      icon: '🔒',
+      title: 'Bloqueo de predicciones',
+      text: 'Cuando el torneo comience el 11 de junio, toca este botón para bloquear predicciones.\n\nLos partidos también se bloquean solos por fecha/hora, pero este botón te da control total.',
+      tip: '💡 Las predicciones de eliminatorias se pueden seguir haciendo entre fases.'
+    },
+    {
+      target: '#admin-spec-sec',
+      pos: 'top',
+      tab: 'especiales',
+      icon: '🌟',
+      title: 'Resultados especiales',
+      text: 'Al terminar el torneo, ingresa aquí el campeón real, goleador, subcampeón y la sorpresa.\n\nLos puntos especiales de todos se suman automáticamente.',
+      tip: null
+    },
+    {
+      target: null,
+      pos: 'center',
+      icon: '✅',
+      title: '¡Eres el admin ideal!',
+      text: 'Resumen de tus responsabilidades:\n\n1. Compartir el código de invitación\n2. Ingresar resultados después de cada partido\n3. Llenar equipos clasificados en cada fase\n4. Ingresar resultados especiales al final\n\n¡El torneo empieza el 11 de junio!',
+      tip: null
+    }
+  ]
+};
+
+var tourRole = '', tourIdx = 0, tourSteps = [];
+
+function checkFirstTime(){
+  // Solo mostrar si el usuario acaba de entrar (no ha visto el tour)
+  var key = 'tour_done_'+CC+'_'+CP;
+  if(!localStorage.getItem(key)){
+    setTimeout(function(){
+      document.getElementById('tour-role-screen').classList.add('open');
+    }, 800);
+  }
+}
+
+function startTour(role){
+  tourRole = role;
+  tourSteps = TOUR_STEPS[role];
+  tourIdx = 0;
+  document.getElementById('tour-role-screen').classList.remove('open');
+  document.getElementById('tour-overlay').classList.add('active');
+  document.getElementById('tour-tooltip').classList.add('active');
+  renderTourStep();
+}
+
+function skipTour(){
+  document.getElementById('tour-role-screen').classList.remove('open');
+  markTourDone();
+}
+
+function endTour(){
+  document.getElementById('tour-overlay').classList.remove('active');
+  document.getElementById('tour-tooltip').classList.remove('active');
+  document.getElementById('tour-role-screen').classList.remove('open');
+  markTourDone();
+  toast('¡Tour completado! Ya puedes jugar 🏆','ok');
+}
+
+function markTourDone(){
+  localStorage.setItem('tour_done_'+CC+'_'+CP,'1');
+}
+
+function tourNext(){
+  if(tourIdx < tourSteps.length - 1){
+    tourIdx++;
+    renderTourStep();
+  } else {
+    endTour();
+  }
+}
+
+function tourPrev(){
+  if(tourIdx > 0){
+    tourIdx--;
+    renderTourStep();
+  }
+}
+
+function renderTourStep(){
+  var step = tourSteps[tourIdx];
+  var total = tourSteps.length;
+
+  // Navigate to correct tab if needed
+  if(step.tab){
+    var tabBtn = document.querySelector('button[onclick="showTab(\''+step.tab+'\',this)"]');
+    if(tabBtn) showTab(step.tab, tabBtn);
+  }
+
+  // Update text
+  document.getElementById('tt-step-lbl').textContent = 'PASO '+(tourIdx+1)+' DE '+total;
+  document.getElementById('tt-icon').textContent = step.icon;
+  document.getElementById('tt-title').textContent = step.title;
+  document.getElementById('tt-text').textContent = step.text;
+  var tipEl = document.getElementById('tt-tip');
+  if(step.tip){ tipEl.style.display='block'; tipEl.textContent=step.tip; }
+  else { tipEl.style.display='none'; }
+
+  // Progress bar
+  document.getElementById('tt-prog-fill').style.width = ((tourIdx+1)/total*100)+'%';
+
+  // Dots
+  var dotsEl = document.getElementById('tt-dots');
+  dotsEl.innerHTML='';
+  for(var i=0;i<total;i++){
+    var d=document.createElement('div');
+    d.className='tt-dot'+(i===tourIdx?' active':'');
+    dotsEl.appendChild(d);
+  }
+
+  // Prev button
+  document.getElementById('tt-prev').style.visibility = tourIdx>0?'visible':'hidden';
+
+  // Next button text
+  document.getElementById('tt-next').textContent = tourIdx===total-1?'¡ENTENDIDO! ✓':'SIGUIENTE →';
+
+  // Position tooltip and highlight
+  setTimeout(function(){ positionTourStep(step); }, step.tab?400:50);
+}
+
+function positionTourStep(step){
+  var hole = document.getElementById('tour-hole');
+  var tooltip = document.getElementById('tour-tooltip');
+
+  if(!step.target){
+    // Center — no highlight, tooltip centered
+    hole.style.display='none';
+    tooltip.className='active';
+    tooltip.style.top='50%';
+    tooltip.style.left='50%';
+    tooltip.style.transform='translate(-50%,-50%)';
+    tooltip.style.bottom='';
+    return;
+  }
+
+  var el = document.querySelector(step.target);
+  if(!el){
+    // fallback to center
+    hole.style.display='none';
+    tooltip.className='active';
+    tooltip.style.top='50%';
+    tooltip.style.left='50%';
+    tooltip.style.transform='translate(-50%,-50%)';
+    tooltip.style.bottom='';
+    return;
+  }
+
+  // Scroll element into view
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+
+  setTimeout(function(){
+    var rect = el.getBoundingClientRect();
+    var pad = 8;
+    // Position hole
+    hole.style.display='block';
+    hole.style.top=(rect.top-pad)+'px';
+    hole.style.left=(rect.left-pad)+'px';
+    hole.style.width=(rect.width+pad*2)+'px';
+    hole.style.height=(rect.height+pad*2)+'px';
+
+    // Position tooltip
+    var tw=290, th=240;
+    var vw=window.innerWidth, vh=window.innerHeight;
+    tooltip.style.transform='';
+    tooltip.className='active';
+
+    var pos=step.pos||'bottom';
+    var gap=16;
+
+    if(pos==='bottom'){
+      var top=rect.bottom+gap;
+      if(top+th>vh) pos='top';
+      else{
+        tooltip.style.top=top+'px';
+        var left=rect.left+(rect.width-tw)/2;
+        tooltip.style.left=Math.max(8,Math.min(left,vw-tw-8))+'px';
+        tooltip.style.bottom='';
+        tooltip.classList.add('arr-bottom');
+      }
+    }
+    if(pos==='top'){
+      tooltip.style.top=(rect.top-th-gap)+'px';
+      var left=rect.left+(rect.width-tw)/2;
+      tooltip.style.left=Math.max(8,Math.min(left,vw-tw-8))+'px';
+      tooltip.style.bottom='';
+      tooltip.classList.add('arr-top');
+    }
+    if(pos==='left'){
+      tooltip.style.top=(rect.top+(rect.height-th)/2)+'px';
+      tooltip.style.left=(rect.left-tw-gap)+'px';
+      tooltip.style.bottom='';
+      tooltip.classList.add('arr-left');
+    }
+  }, 350);
+}
+
+// Botón de ayuda siempre visible (para re-lanzar tour)
+function addHelpBtn(){
+  var btn=document.createElement('button');
+  btn.id='help-btn';
+  btn.innerHTML='&#x2753; Ayuda';
+  btn.style.cssText='position:fixed;bottom:80px;left:16px;z-index:60;padding:8px 14px;background:rgba(0,61,165,.2);border:1px solid rgba(0,61,165,.3);border-radius:100px;color:#4a90e2;font-family:Oswald,sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;display:none;';
+  btn.onclick=function(){document.getElementById('tour-role-screen').classList.add('open');};
+  document.body.appendChild(btn);
+}
+
+
 document.getElementById('ls').style.display='none';
 document.getElementById('s-landing').style.display='flex';
 document.getElementById('s-landing').classList.add('active');
 renderLanding();
+addHelpBtn();
 
 document.getElementById('i-aname').addEventListener('keydown',function(e){if(e.key==='Enter')createGroup();});
 document.getElementById('i-jname').addEventListener('keydown',function(e){if(e.key==='Enter')joinGroup();});
