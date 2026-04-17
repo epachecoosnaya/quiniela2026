@@ -529,6 +529,84 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
     </div>
 
     <div class="apanel">
+      <div class="apanel-title">&#x1F9E0; CONFIGURACI&Oacute;N DE TRIVIA</div>
+      <div style="font-size:12px;color:var(--dim);margin-bottom:12px">
+        Define cu&aacute;ndo y c&oacute;mo se liberan las preguntas para todos los jugadores del grupo.
+      </div>
+
+      <!-- Modo de liberación -->
+      <div style="margin-bottom:12px">
+        <div class="real-lbl" style="margin-bottom:6px">MODO DE LIBERACI&Oacute;N</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <label id="trivia-modo-auto-lbl" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(0,61,165,.1);border:1px solid rgba(0,61,165,.3);border-radius:5px;cursor:pointer">
+            <input type="radio" name="trivia-modo" value="auto" id="trivia-modo-auto" style="accent-color:var(--blue)">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--white)">&#x1F916; Autom&aacute;tico</div>
+              <div style="font-size:10px;color:var(--dim)">Por goles y partidos</div>
+            </div>
+          </label>
+          <label id="trivia-modo-manual-lbl" style="display:flex;align-items:center;gap:8px;padding:10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:5px;cursor:pointer">
+            <input type="radio" name="trivia-modo" value="manual" id="trivia-modo-manual" style="accent-color:var(--gold)">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--white)">&#x270D;&#xFE0F; Manual</div>
+              <div style="font-size:10px;color:var(--dim)">T&uacute; controlas cu&aacute;ndo</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Config modo automático -->
+      <div id="trivia-config-auto" style="margin-bottom:12px">
+        <div class="real-lbl" style="margin-bottom:6px">CADA CU&Aacute;NTOS PARTIDOS = 1 TRIVIA</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <input type="range" id="trivia-cada" min="1" max="6" step="1" value="2"
+            oninput="document.getElementById('trivia-cada-val').textContent=this.value"
+            style="flex:1;accent-color:var(--blue);height:4px">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);min-width:32px;text-align:center" id="trivia-cada-val">2</div>
+          <div style="font-size:11px;color:var(--dim)">partidos</div>
+        </div>
+        <div style="font-size:11px;color:var(--dim);margin-top:4px">Partidos con 3+ goles dan +1 extra. Cada fase KO da +3.</div>
+
+        <div class="real-lbl" style="margin:10px 0 6px">M&Aacute;XIMO DE TRIVIAS ACUMULADAS</div>
+        <div style="display:flex;gap:6px">
+          <button class="trivia-max-btn" data-v="1" onclick="selectTriviaMax(1,this)">1</button>
+          <button class="trivia-max-btn" data-v="2" onclick="selectTriviaMax(2,this)">2</button>
+          <button class="trivia-max-btn active" data-v="3" onclick="selectTriviaMax(3,this)">3</button>
+          <button class="trivia-max-btn" data-v="5" onclick="selectTriviaMax(5,this)">5</button>
+        </div>
+        <div style="font-size:11px;color:var(--dim);margin-top:4px">Si ya tiene este m&aacute;ximo, no acumula m&aacute;s aunque haya partidos.</div>
+      </div>
+
+      <!-- Config modo manual -->
+      <div id="trivia-config-manual" style="display:none;margin-bottom:12px">
+        <div style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.2);border-radius:6px;padding:11px;font-size:12px;color:var(--dim);line-height:1.6">
+          En modo manual, el bot&oacute;n <b style="color:var(--gold)">?</b> solo aparece cuando t&uacute; liberas trivias con el bot&oacute;n de abajo.
+          Puedes darle a todos al mismo tiempo o liberar varias de golpe.
+        </div>
+        <div style="margin-top:10px">
+          <div class="real-lbl" style="margin-bottom:6px">¿CU&Aacute;NTAS LIBERAR AHORA?</div>
+          <div style="display:flex;gap:6px">
+            <button class="trivia-max-btn" data-v="1" onclick="selectTriviaLiberar(1,this)">1</button>
+            <button class="trivia-max-btn active" data-v="2" onclick="selectTriviaLiberar(2,this)">2</button>
+            <button class="trivia-max-btn" data-v="3" onclick="selectTriviaLiberar(3,this)">3</button>
+            <button class="trivia-max-btn" data-v="5" onclick="selectTriviaLiberar(5,this)">5</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón liberar ahora (ambos modos) -->
+      <button onclick="liberarTriviaAhora()" style="width:100%;padding:11px;background:linear-gradient(135deg,rgba(245,166,35,.2),rgba(200,16,46,.15));border:1px solid rgba(245,166,35,.3);border-radius:5px;color:var(--gold);font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;margin-bottom:8px">
+        &#x26A1; LIBERAR TRIVIA AHORA PARA TODOS
+      </button>
+      <button onclick="saveTriviaConfig()" style="width:100%;padding:10px;background:rgba(0,61,165,.2);border:1px solid rgba(0,61,165,.3);border-radius:5px;color:#4a90e2;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer">
+        &#x1F4BE; GUARDAR CONFIGURACI&Oacute;N
+      </button>
+
+      <!-- Status actual -->
+      <div id="trivia-config-status" style="margin-top:10px;padding:9px;background:rgba(0,0,0,.3);border-radius:5px;font-size:11px;color:var(--dim);line-height:1.8;display:none"></div>
+    </div>
+
+    <div class="apanel">
       <div class="apanel-title">&#x1F512; BLOQUEO</div>
       <div style="font-size:12px;color:var(--dim);margin-bottom:9px">Bloquea cuando comience el torneo</div>
       <button class="lock-btn" id="lock-btn" onclick="toggleLock()"></button>
@@ -714,6 +792,9 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 <style>
 .liga-btn{padding:9px 6px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:5px;color:var(--dim);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
 .liga-btn:hover,.liga-btn.active{border-color:var(--blue);background:rgba(0,61,165,.15);color:var(--white);}
+.trivia-max-btn{flex:1;padding:8px;background:rgba(0,0,0,.4);border:1px solid var(--border);border-radius:5px;color:var(--dim);font-family:'Bebas Neue',sans-serif;font-size:20px;cursor:pointer;transition:all .2s;text-align:center;}
+.trivia-max-btn:hover{border-color:var(--gold);color:var(--gold);}
+.trivia-max-btn.active{background:rgba(245,166,35,.15);border-color:var(--gold);color:var(--gold);}
 .match-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:5px;margin-bottom:5px;flex-wrap:wrap;}
 .match-team{font-size:12px;font-weight:700;font-family:'Oswald',sans-serif;flex:1;min-width:80px;}
 .match-score{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--gold);min-width:40px;text-align:center;}
@@ -1053,28 +1134,48 @@ var CC='', CP='', isAdmin=false, GD={}, unsub=null, collapsed={};
 var triviaInterval=null, triviaCountdown=5, triviaActive=false, triviaAnswered=false;
 
 // ══════════════════════════════════
-// ALGORITMO DE CRÉDITOS DE TRIVIA
-// Se desbloquean por eventos REALES del torneo:
-//   +1 crédito por cada partido terminado
-//   +1 crédito extra si el partido tuvo 3+ goles (partido goleador)
-//   +3 créditos al comenzar cada fase eliminatoria
-//   Máximo acumulable: 3 créditos sin usar
+// SISTEMA DE TRIVIA — configurable por admin
+// Config guardada en Firebase: GD.triviaConfig = {
+//   modo: 'auto' | 'manual',
+//   cadaPartidos: 2,        // cada X partidos = 1 crédito (modo auto)
+//   maxAcumulado: 3,        // máximo sin usar
+//   creditosExtra: 0        // créditos manuales liberados por admin
+// }
 // ══════════════════════════════════
+function getTriviaConfig(){
+  return Object.assign({modo:'auto',cadaPartidos:2,maxAcumulado:3,creditosExtra:0}, GD.triviaConfig||{});
+}
+
 function getTriviaCredits(){
+  var cfg=getTriviaConfig();
+  var usados=parseInt(localStorage.getItem('trivia_usados_'+CC+'_'+CP)||'0');
+
+  if(cfg.modo==='manual'){
+    // Solo los créditos que el admin liberó manualmente
+    var total=parseInt(cfg.creditosExtra||0);
+    return Math.max(0,Math.min(total-usados, cfg.maxAcumulado));
+  }
+
+  // Modo automático — basado en eventos del torneo
   var results=GD.results||{};
   var partidos=Object.keys(results).length;
+  // Cada cadaPartidos terminados = 1 crédito
+  var porPartidos=Math.floor(partidos/(cfg.cadaPartidos||2));
+  // Partidos goleadores (3+ goles) = 1 extra c/u
   var emocionantes=Object.values(results).filter(function(r){
     return (r.h||0)+(r.a||0)>=3;
   }).length;
+  var porGoleadores=Math.floor(emocionantes/2); // cada 2 goleadores = 1 extra
+  // Fases KO = +3 c/u
   var koResults=GD.koResults||{};
   var fasesBono=0;
   [0,1,2,3].forEach(function(ri){
-    var hayResultados=KO_ROUNDS[ri].matches.some(function(m){return koResults[m.id+'_winner'];});
-    if(hayResultados)fasesBono+=3;
+    if(KO_ROUNDS[ri].matches.some(function(m){return koResults[m.id+'_winner'];}))fasesBono+=3;
   });
-  var totalGenerados=partidos+emocionantes+fasesBono;
-  var usados=parseInt(localStorage.getItem('trivia_usados_'+CC+'_'+CP)||'0');
-  return Math.max(0,Math.min(totalGenerados-usados,3));
+  // Créditos manuales adicionales del admin
+  var manuales=parseInt(cfg.creditosExtra||0);
+  var totalGenerados=porPartidos+porGoleadores+fasesBono+manuales;
+  return Math.max(0,Math.min(totalGenerados-usados, cfg.maxAcumulado||3));
 }
 
 function actualizarBotonTrivia(){
@@ -1082,8 +1183,9 @@ function actualizarBotonTrivia(){
   if(!CC){fab.classList.remove('visible');return;}
   var creditos=getTriviaCredits();
   fab.classList.toggle('visible',creditos>0);
-  // mostrar contador en el botón
-  fab.innerHTML=creditos>0?('&#x2753;<span style="position:absolute;top:-4px;right:-4px;background:var(--gold);color:#000;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:Oswald,sans-serif">'+creditos+'</span>'):'&#x2753;';
+  fab.innerHTML=creditos>0
+    ?('&#x2753;<span style="position:absolute;top:-4px;right:-4px;background:var(--gold);color:#000;border-radius:50%;width:18px;height:18px;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:Oswald,sans-serif">'+creditos+'</span>')
+    :'&#x2753;';
   fab.style.position='fixed';
 }
 
@@ -1176,7 +1278,7 @@ function enterGroup(code,player,adminMode){
     var at=document.querySelector('.tab.on');
     if(at){
       if(at.id==='t-tabla')renderLB();
-      if(at.id==='t-admin'){renderAStats();renderAPlayers();}
+      if(at.id==='t-admin'){renderAStats();renderAPlayers();loadTriviaConfig();}
       if(at.id==='t-ko')renderKO();
       if(at.id==='t-miq')renderMyQuiniela();
     }
@@ -1210,7 +1312,7 @@ function showTab(t,btn){
   var noSave=['tabla','admin','ko','miq'].includes(t);
   document.getElementById('save-bar').style.display=noSave?'none':'block';
   if(t==='tabla')renderLB();
-  if(t==='admin'){renderAStats();renderAPlayers();renderAMatches();renderAdminKOTeams();}
+  if(t==='admin'){renderAStats();renderAPlayers();renderAMatches();renderAdminKOTeams();loadTriviaConfig();}
   if(t==='ko')renderKO();
   if(t==='miq')renderMyQuiniela();
   window.scrollTo(0,0);
@@ -2450,8 +2552,107 @@ function renderLeagueResults(events,leagueName,today){
   con.innerHTML=html;
 }
 
+// ══════════════════════════════════
+// ADMIN — CONFIGURACIÓN DE TRIVIA
+// ══════════════════════════════════
+var triviaLiberarCount=2; // cuántas liberar en modo manual
 
-document.getElementById('ls').style.display='none';
+function loadTriviaConfig(){
+  var cfg=getTriviaConfig();
+  // Set radio
+  var autoR=document.getElementById('trivia-modo-auto');
+  var manR=document.getElementById('trivia-modo-manual');
+  if(!autoR||!manR)return;
+  if(cfg.modo==='manual'){manR.checked=true;toggleTriviaConfigUI('manual');}
+  else{autoR.checked=true;toggleTriviaConfigUI('auto');}
+  // Slider
+  var slider=document.getElementById('trivia-cada');
+  if(slider){slider.value=cfg.cadaPartidos||2;document.getElementById('trivia-cada-val').textContent=slider.value;}
+  // Max buttons
+  document.querySelectorAll('.trivia-max-btn[data-v]').forEach(function(b){
+    if(parseInt(b.dataset.v)===parseInt(cfg.maxAcumulado||3))b.classList.add('active');
+    else b.classList.remove('active');
+  });
+  updateTriviaConfigStatus();
+}
+
+function toggleTriviaConfigUI(modo){
+  var autoDiv=document.getElementById('trivia-config-auto');
+  var manDiv=document.getElementById('trivia-config-manual');
+  if(!autoDiv||!manDiv)return;
+  autoDiv.style.display=modo==='auto'?'block':'none';
+  manDiv.style.display=modo==='manual'?'block':'none';
+}
+
+function selectTriviaMax(val,btn){
+  document.querySelectorAll('.trivia-max-btn[data-v]').forEach(function(b){
+    if(b.closest('#trivia-config-auto'))b.classList.remove('active');
+  });
+  btn.classList.add('active');
+}
+
+function selectTriviaLiberar(val,btn){
+  triviaLiberarCount=val;
+  document.querySelectorAll('.trivia-max-btn').forEach(function(b){
+    if(b.closest('#trivia-config-manual'))b.classList.remove('active');
+  });
+  btn.classList.add('active');
+}
+
+function saveTriviaConfig(){
+  var modoEl=document.querySelector('input[name="trivia-modo"]:checked');
+  var modo=modoEl?modoEl.value:'auto';
+  var cadaEl=document.getElementById('trivia-cada');
+  var maxEl=document.querySelector('#trivia-config-auto .trivia-max-btn.active');
+  var cfg={
+    modo:modo,
+    cadaPartidos:cadaEl?parseInt(cadaEl.value):2,
+    maxAcumulado:maxEl?parseInt(maxEl.dataset.v):3,
+    creditosExtra:parseInt((GD.triviaConfig||{}).creditosExtra||0)
+  };
+  sync('busy');
+  db.ref('groups/'+CC).update({triviaConfig:cfg})
+    .then(function(){sync('ok');toast('Configuración de trivia guardada ✓','ok');updateTriviaConfigStatus();})
+    .catch(function(e){toast('Error: '+e.message,'err');});
+}
+
+function liberarTriviaAhora(){
+  var cfg=getTriviaConfig();
+  var cuantas=cfg.modo==='manual'?triviaLiberarCount:1;
+  var newExtra=parseInt(cfg.creditosExtra||0)+cuantas;
+  sync('busy');
+  db.ref('groups/'+CC+'/triviaConfig/creditosExtra').set(newExtra)
+    .then(function(){
+      sync('ok');
+      toast('⚡ '+cuantas+' trivia'+(cuantas>1?'s':'')+' liberada'+(cuantas>1?'s':'')+' para todos','ok');
+      updateTriviaConfigStatus();
+      actualizarBotonTrivia();
+    })
+    .catch(function(e){toast('Error: '+e.message,'err');});
+}
+
+function updateTriviaConfigStatus(){
+  var el=document.getElementById('trivia-config-status');
+  if(!el)return;
+  var cfg=getTriviaConfig();
+  var results=GD.results||{};
+  var partidos=Object.keys(results).length;
+  var credDisp=getTriviaCredits();
+  el.style.display='block';
+  el.innerHTML='<b style="color:var(--white)">Modo:</b> '+(cfg.modo==='manual'?'Manual':'Automático')+'<br>'
+    +(cfg.modo==='auto'?'<b style="color:var(--white)">Regla:</b> 1 trivia por cada '+cfg.cadaPartidos+' partidos terminados<br>':'')
+    +'<b style="color:var(--white)">Partidos terminados:</b> '+partidos+'<br>'
+    +'<b style="color:var(--white)">Máx. acumulado:</b> '+cfg.maxAcumulado+'<br>'
+    +'<b style="color:var(--white)">Créditos extra liberados:</b> '+parseInt(cfg.creditosExtra||0)+'<br>'
+    +'<b style="color:var(--gold)">Tus créditos disponibles:</b> '+credDisp;
+}
+
+// Hook radio buttons for live toggle
+document.addEventListener('change',function(e){
+  if(e.target&&e.target.name==='trivia-modo'){
+    toggleTriviaConfigUI(e.target.value);
+  }
+});
 document.getElementById('s-landing').style.display='flex';
 document.getElementById('s-landing').classList.add('active');
 renderLanding();
