@@ -792,6 +792,49 @@ const INITIAL_RESULTS = /*RESULTS_BEGIN*/{}/*RESULTS_END*/;
 
 // ============================================================
 // ============================================================
+// TEAM MATCHING — maps API English names to our Spanish names
+// ============================================================
+const TEAM_MAP = {
+  "mexico":"México","southafrica":"Sudáfrica","rsa":"Sudáfrica",
+  "korearepublic":"Corea del Sur","southkorea":"Corea del Sur","korea":"Corea del Sur",
+  "czechia":"Chequia","czechrepublic":"Chequia",
+  "canada":"Canadá",
+  "bosniaherzegovina":"Bosnia y Herzegovina","bosnia":"Bosnia y Herzegovina",
+  "usa":"Estados Unidos","unitedstates":"Estados Unidos",
+  "paraguay":"Paraguay","brazil":"Brasil","morocco":"Marruecos",
+  "haiti":"Haití","scotland":"Escocia","australia":"Australia",
+  "turkey":"Turquía","turkiye":"Turquía",
+  "qatar":"Qatar","switzerland":"Suiza",
+  "germany":"Alemania","curacao":"Curazao","curaçao":"Curazao",
+  "cotedivoire":"Costa de Marfil","côtedivoire":"Costa de Marfil","ivorycoast":"Costa de Marfil",
+  "ecuador":"Ecuador","netherlands":"Países Bajos","japan":"Japón",
+  "sweden":"Suecia","tunisia":"Túnez",
+  "spain":"España","caboverde":"Cabo Verde",
+  "saudiarabia":"Arabia Saudita","uruguay":"Uruguay",
+  "belgium":"Bélgica","egypt":"Egipto",
+  "iran":"Irán","iriran":"Irán",
+  "newzealand":"Nueva Zelanda","france":"Francia","senegal":"Senegal",
+  "iraq":"Iraq","norway":"Noruega","argentina":"Argentina",
+  "algeria":"Argelia","austria":"Austria","jordan":"Jordania",
+  "england":"Inglaterra","croatia":"Croacia","ghana":"Ghana",
+  "panama":"Panamá","portugal":"Portugal",
+  "congodr":"RD Congo","drcongo":"RD Congo","democraticrepublicofcongo":"RD Congo",
+  "uzbekistan":"Uzbekistán","colombia":"Colombia"
+};
+function normN(s) {
+  return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+}
+function resolveT(raw) {
+  return TEAM_MAP[normN(raw)] || null;
+}
+// Build lookup: "localNorm|visitorNorm" -> {code, localName}
+const PAIR_MAP = {};
+DATA.matches.forEach(m => {
+  PAIR_MAP[normN(m.local)+"|"+normN(m.visitor)] = { code: m.code, swapped: false };
+  PAIR_MAP[normN(m.visitor)+"|"+normN(m.local)] = { code: m.code, swapped: true };
+});
+
+// ============================================================
 // STATE
 // ============================================================
 const STORAGE_KEY = "quiniela_mundial_2026_results_v1";
@@ -1511,26 +1554,41 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Respuesta vacía de la API");
       }
 
-      let imported = 0, alreadyHad = 0, noScore = 0;
+      let imported = 0, alreadyHad = 0, noScore = 0, unmatched = 0;
 
       for (const m of matches) {
-        // Only group stage matches (M001-M072)
-        const num = m.match_number;
-        if (!num || num < 1 || num > 72) continue;
-
-        // Only completed matches
+        // Only completed matches with scores
         if (m.status !== "completed") { noScore++; continue; }
         if (m.home_score == null || m.away_score == null) { noScore++; continue; }
+        if (!m.home_team || !m.away_team) continue;
 
-        const code = "M" + String(num).padStart(3, "0");
+        // Resolve team names to our Spanish names
+        const home = resolveT(m.home_team);
+        const away = resolveT(m.away_team);
+        if (!home || !away) { unmatched++; continue; }
+
+        // Find the match in our quiniela by team pair
+        const key = normN(home) + "|" + normN(away);
+        const info = PAIR_MAP[key];
+        if (!info) { unmatched++; continue; }
+
         const hs = parseInt(m.home_score, 10);
         const as = parseInt(m.away_score, 10);
-        const result = hs > as ? "L" : as > hs ? "V" : "E";
 
-        const existing = state.realResults[code];
+        // Determine result relative to OUR local team
+        let result;
+        if (info.swapped) {
+          // API home = our visitor, API away = our local
+          result = as > hs ? "L" : hs > as ? "V" : "E";
+        } else {
+          // API home = our local
+          result = hs > as ? "L" : as > hs ? "V" : "E";
+        }
+
+        const existing = state.realResults[info.code];
         if (existing === result) { alreadyHad++; continue; }
 
-        state.realResults[code] = result;
+        state.realResults[info.code] = result;
         imported++;
       }
 
