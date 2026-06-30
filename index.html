@@ -580,6 +580,8 @@ document.addEventListener("DOMContentLoaded",()=>{
         const code = "M" + String(num).padStart(3, "0");
         const hs = parseInt(m.home_score, 10), as = parseInt(m.away_score, 10);
         const result = hs > as ? "L" : as > hs ? "V" : "E";
+        // No sobreescribir resultados ya correctos en INITIAL_RESULTS
+        if(INITIAL_RESULTS.hasOwnProperty(code)) { alreadyHad++; continue; }
         if(state.realResults[code] === result) { alreadyHad++; continue; }
         state.realResults[code] = result;
         imported++;
