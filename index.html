@@ -702,13 +702,8 @@
     </div>
     <div class="toolbar-row">
       <button class="btn primary" id="quick-input">⚡ Captura rápida</button>
-      <button class="btn primary" id="auto-import" style="background:var(--local);border-color:var(--local);">🔄 Actualizar resultados</button>
       <button class="btn" id="export-results">📤 Exportar</button>
       <button class="btn" id="download-snapshot">💾 Descargar</button>
-    </div>
-    <div class="toolbar-row" id="live-status" style="font-size:0.82rem;color:var(--muted);display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <span id="live-dot" style="width:8px;height:8px;border-radius:50%;background:#9ca3af;display:inline-block;"></span>
-      <span id="live-text">Sin actualizar aún</span>
     </div>
     <div class="toolbar-row">
       <button class="btn" id="expand-all">⬇️ Expandir todo</button>
@@ -722,7 +717,7 @@
   <div id="content"></div>
 
   <div class="footer-info">
-    Los resultados se actualizan automáticamente desde WC2026 API cada 5 minutos.
+    Los resultados reales se capturan manualmente. Para eliminatorias, registra el resultado de los 90 minutos (antes de tiempo extra/penales).
   </div>
 </div>
 
@@ -776,7 +771,7 @@ M005 V"></textarea>
 // ============================================================
 // DATA (embedded)
 // ============================================================
-const DATA = {"matches": [{"code": "M001", "local": "México", "visitor": "Sudáfrica"}, {"code": "M002", "local": "Corea del Sur", "visitor": "Chequia"}, {"code": "M003", "local": "Canadá", "visitor": "Bosnia y Herzegovina"}, {"code": "M004", "local": "Estados Unidos", "visitor": "Paraguay"}, {"code": "M005", "local": "Brasil", "visitor": "Marruecos"}, {"code": "M006", "local": "Haití", "visitor": "Escocia"}, {"code": "M007", "local": "Australia", "visitor": "Turquía"}, {"code": "M008", "local": "Qatar", "visitor": "Suiza"}, {"code": "M009", "local": "Alemania", "visitor": "Curazao"}, {"code": "M010", "local": "Costa de Marfil", "visitor": "Ecuador"}, {"code": "M011", "local": "Países Bajos", "visitor": "Japón"}, {"code": "M012", "local": "Suecia", "visitor": "Túnez"}, {"code": "M013", "local": "España", "visitor": "Cabo Verde"}, {"code": "M014", "local": "Arabia Saudita", "visitor": "Uruguay"}, {"code": "M015", "local": "Bélgica", "visitor": "Egipto"}, {"code": "M016", "local": "Irán", "visitor": "Nueva Zelanda"}, {"code": "M017", "local": "Francia", "visitor": "Senegal"}, {"code": "M018", "local": "Iraq", "visitor": "Noruega"}, {"code": "M019", "local": "Argentina", "visitor": "Argelia"}, {"code": "M020", "local": "Austria", "visitor": "Jordania"}, {"code": "M021", "local": "Inglaterra", "visitor": "Croacia"}, {"code": "M022", "local": "Ghana", "visitor": "Panamá"}, {"code": "M023", "local": "Portugal", "visitor": "RD Congo"}, {"code": "M024", "local": "Uzbekistán", "visitor": "Colombia"}, {"code": "M025", "local": "Chequia", "visitor": "Sudáfrica"}, {"code": "M026", "local": "Suiza", "visitor": "Bosnia y Herzegovina"}, {"code": "M027", "local": "Canadá", "visitor": "Qatar"}, {"code": "M028", "local": "México", "visitor": "Corea del Sur"}, {"code": "M029", "local": "Brasil", "visitor": "Haití"}, {"code": "M030", "local": "Escocia", "visitor": "Marruecos"}, {"code": "M031", "local": "Turquía", "visitor": "Paraguay"}, {"code": "M032", "local": "Estados Unidos", "visitor": "Australia"}, {"code": "M033", "local": "Alemania", "visitor": "Costa de Marfil"}, {"code": "M034", "local": "Ecuador", "visitor": "Curazao"}, {"code": "M035", "local": "Países Bajos", "visitor": "Suecia"}, {"code": "M036", "local": "Túnez", "visitor": "Japón"}, {"code": "M037", "local": "España", "visitor": "Arabia Saudita"}, {"code": "M038", "local": "Uruguay", "visitor": "Cabo Verde"}, {"code": "M039", "local": "Bélgica", "visitor": "Irán"}, {"code": "M040", "local": "Nueva Zelanda", "visitor": "Egipto"}, {"code": "M041", "local": "Francia", "visitor": "Iraq"}, {"code": "M042", "local": "Noruega", "visitor": "Senegal"}, {"code": "M043", "local": "Argentina", "visitor": "Austria"}, {"code": "M044", "local": "Jordania", "visitor": "Argelia"}, {"code": "M045", "local": "Inglaterra", "visitor": "Ghana"}, {"code": "M046", "local": "Panamá", "visitor": "Croacia"}, {"code": "M047", "local": "Portugal", "visitor": "Uzbekistán"}, {"code": "M048", "local": "Colombia", "visitor": "RD Congo"}, {"code": "M049", "local": "México", "visitor": "Chequia"}, {"code": "M050", "local": "Corea del Sur", "visitor": "Sudáfrica"}, {"code": "M051", "local": "Canadá", "visitor": "Suiza"}, {"code": "M052", "local": "Bosnia y Herzegovina", "visitor": "Qatar"}, {"code": "M053", "local": "Escocia", "visitor": "Brasil"}, {"code": "M054", "local": "Marruecos", "visitor": "Haití"}, {"code": "M055", "local": "Ecuador", "visitor": "Alemania"}, {"code": "M056", "local": "Curazao", "visitor": "Costa de Marfil"}, {"code": "M057", "local": "Túnez", "visitor": "Países Bajos"}, {"code": "M058", "local": "Japón", "visitor": "Suecia"}, {"code": "M059", "local": "Estados Unidos", "visitor": "Turquía"}, {"code": "M060", "local": "Paraguay", "visitor": "Australia"}, {"code": "M061", "local": "Noruega", "visitor": "Francia"}, {"code": "M062", "local": "Senegal", "visitor": "Iraq"}, {"code": "M063", "local": "Nueva Zelanda", "visitor": "Bélgica"}, {"code": "M064", "local": "Egipto", "visitor": "Irán"}, {"code": "M065", "local": "Uruguay", "visitor": "España"}, {"code": "M066", "local": "Cabo Verde", "visitor": "Arabia Saudita"}, {"code": "M067", "local": "Panamá", "visitor": "Inglaterra"}, {"code": "M068", "local": "Croacia", "visitor": "Ghana"}, {"code": "M069", "local": "Jordania", "visitor": "Argentina"}, {"code": "M070", "local": "Argelia", "visitor": "Austria"}, {"code": "M071", "local": "Colombia", "visitor": "Portugal"}, {"code": "M072", "local": "RD Congo", "visitor": "Uzbekistán"}, {"code": "M073", "local": "Sudáfrica", "visitor": "Canadá"}, {"code": "M074", "local": "Brasil", "visitor": "Japón"}, {"code": "M075", "local": "Alemania", "visitor": "Paraguay"}, {"code": "M076", "local": "Países Bajos", "visitor": "Marruecos"}, {"code": "M077", "local": "Costa de Marfil", "visitor": "Noruega"}, {"code": "M078", "local": "Francia", "visitor": "Suecia"}, {"code": "M079", "local": "México", "visitor": "Ecuador"}, {"code": "M080", "local": "Inglaterra", "visitor": "RD Congo"}, {"code": "M081", "local": "Bélgica", "visitor": "Senegal"}, {"code": "M082", "local": "Estados Unidos", "visitor": "Bosnia y Herzegovina"}, {"code": "M083", "local": "España", "visitor": "Austria"}, {"code": "M084", "local": "Portugal", "visitor": "Croacia"}, {"code": "M085", "local": "Suiza", "visitor": "Argelia"}, {"code": "M086", "local": "Australia", "visitor": "Egipto"}, {"code": "M087", "local": "Argentina", "visitor": "Cabo Verde"}, {"code": "M088", "local": "Colombia", "visitor": "Ghana"}], "players": [{"name": "Cesc", "predictions": "LLLLLVVVLELLLVLLLVLLLLLVLLLELVLLLLLVLLLVLELVLVLLLLVLVLVVVLELVLVLVLVLVVELVLLEVLLLLLLELELL"}, {"name": "Ana Luz Lopez", "predictions": "LLLEEVVVLEVLLVLELVLELVLVELLELVEVLLLVLLLELLLELVLLLLELVLVEVLVLVEVEVEVLVEVEVLLVVLLLLLLLVLVL"}, {"name": "David Merlo", "predictions": "LLEVLVLELVVLLVLELVLELLLVEELLLLVLLLEVLLLELLLELVLLLELEVLVVVLELEEVVVVVEVELEVLLLVLLLVLLLVVLL"}, {"name": "Eduardo Luevano", "predictions": "LELVLLELLVLLLVLVLVLLLLLVLLLLLELELLEVLLLELLLVLVLLLEELVLEVVEVLLLVVEVVEVVLVVELLVLLELLLELLVL"}, {"name": "Irvin Ávila", "predictions": "LLLLLVVVLVLLLVLLLVLLLVLVLLLLLVVLLLLVLLLLLLLVLVLLLLLVVLVVVLLLVLVVEVVLVVVVLLLLVLLLLLLLLLVL"}, {"name": "Juan Ramirez", "predictions": "LLLLLVVVLVLLLVLLLVLLEVLVLLLLLVVLLLLVLLLLLLLVLVLLLLLVVLVVVLLLVLVVVVVLVVVVLLLLVLLLLLLLLLLL"}, {"name": "Max Rivera", "predictions": "LLLLVVVELVELLVEVLVLEEVLVELLELVLLLLLVLLLVLELELVLLLEELVLEVVLEEVEVLVVVEVVELVELLVLLLVLLLEEVL"}, {"name": "Pedro Masó", "predictions": "LLLLLVEVLELELVLELVLLLELVVLLLLEELLLLELLLELVLVLVLLLLVEELEVLVEELLVEVVVLVVLVVLLLVLLLVLLLLVLL"}, {"name": "Jonathan Luna", "predictions": "LELLLVVVLVLLLVLLLVLLLLLVLLLLLVLLLLLVLLLVLELVLVLLLLVLVLVVVLLEVLVEVVVLVVEEVLVLVLLLLLLLLLVL"}, {"name": "Edder Ávila", "predictions": "LLLVLVVELVEELVLELVLELELVELELLVVLLLLVLLLVLLLELVLLLLEVVLVVELLLVEVEVVVLVELEVLVLVLLLLVLLEEVL"}, {"name": "Cesar Raul", "predictions": "LLLLLVVVLEVELELVLELLLLLVVLEELVLLLLEVLLLVLVLVEVLLLLEVVLVVELELVVVLVEVVVEVLVLVLLLLLVLLLVVLL"}, {"name": "Eduardo Leil", "predictions": "LLELEVVVLVLLLVEVLVLEELLVEELLLVVLLLEVLLLELLLELVLLLLELELEEVEELEEVLVEVLVVLEVELEVLLLEELVEEVL"}, {"name": "Ivette Braunschweiger", "predictions": "LVLLLVEVLVLELVELLVLLLELVLLLLLVLLLELVLLLELELVLVLLELVLVLVEVEELVLVEVVVLVEVVVELEVLLLELLLVEVL"}, {"name": "Diego Cuevas / Cach", "predictions": "LLLVLVVVLVLLLVLELVLLVELVLLLLLVLLLLLVLLLLLELVLVLLLLVLVLVVVVEVVLVVVVVLVLVLVVLVELLLLLLEVVVL"}, {"name": "Valeria / Cris", "predictions": "LVELLVEELELLLVLELVLELLLVLEEELVEELEEVLLLELLLVLVLLLLEEVLVVVEEEVLVEEEVLVEEEVLLLVLLLLLLLLVLL"}, {"name": "Carlos Cuevas", "predictions": "LLLLVVLVLVLLLVLELVLLLLLVLLLLLVLELLLVLLLELVLVLVLLEEVVVLVVVELLVLVVVVVLVLVLVELLVLLLELLLLVLL"}, {"name": "Victor Zea", "predictions": "LELLLVEVLELLLVLLLVLLELLVLLLLLLLLLLLVLLLVLELELVLLLLVLVLVVVELEVLVLVEVLVLVLVLLEVLLLELLLEEVL"}, {"name": "Guillermo Braucsch", "predictions": "LELLLVVVLELLLVLLLVLLEELVLLLLLVLLLLLVLLLVLELELVLLLLVLVLVVVEVEVLVEEVVEVVVEVELLVLLLELLLELEL"}, {"name": "Lalo Tocayo", "predictions": "LELLLVVVLEELLVLLLVLLLLLVLVLLLELLLLLELVLELELVLVLLLLELVLEVVLEEELVEELVLVEELVLLEVLLLELLLEVLL"}, {"name": "Vero Vazquez", "predictions": "LLELLVELLELELVLELLLLVLEELVELVVLLELVLLLVEVLELLLLLLVVVLVVVELLVEVLVELVVEVVVVLLLLLLLLLLLVLVL"}]};
+const DATA = {"matches": [{"code": "M001", "local": "México", "visitor": "Sudáfrica"}, {"code": "M002", "local": "Corea del Sur", "visitor": "Chequia"}, {"code": "M003", "local": "Canadá", "visitor": "Bosnia y Herzegovina"}, {"code": "M004", "local": "Estados Unidos", "visitor": "Paraguay"}, {"code": "M005", "local": "Brasil", "visitor": "Marruecos"}, {"code": "M006", "local": "Haití", "visitor": "Escocia"}, {"code": "M007", "local": "Australia", "visitor": "Turquía"}, {"code": "M008", "local": "Qatar", "visitor": "Suiza"}, {"code": "M009", "local": "Alemania", "visitor": "Curazao"}, {"code": "M010", "local": "Costa de Marfil", "visitor": "Ecuador"}, {"code": "M011", "local": "Países Bajos", "visitor": "Japón"}, {"code": "M012", "local": "Suecia", "visitor": "Túnez"}, {"code": "M013", "local": "España", "visitor": "Cabo Verde"}, {"code": "M014", "local": "Arabia Saudita", "visitor": "Uruguay"}, {"code": "M015", "local": "Bélgica", "visitor": "Egipto"}, {"code": "M016", "local": "Irán", "visitor": "Nueva Zelanda"}, {"code": "M017", "local": "Francia", "visitor": "Senegal"}, {"code": "M018", "local": "Iraq", "visitor": "Noruega"}, {"code": "M019", "local": "Argentina", "visitor": "Argelia"}, {"code": "M020", "local": "Austria", "visitor": "Jordania"}, {"code": "M021", "local": "Inglaterra", "visitor": "Croacia"}, {"code": "M022", "local": "Ghana", "visitor": "Panamá"}, {"code": "M023", "local": "Portugal", "visitor": "RD Congo"}, {"code": "M024", "local": "Uzbekistán", "visitor": "Colombia"}, {"code": "M025", "local": "Chequia", "visitor": "Sudáfrica"}, {"code": "M026", "local": "Suiza", "visitor": "Bosnia y Herzegovina"}, {"code": "M027", "local": "Canadá", "visitor": "Qatar"}, {"code": "M028", "local": "México", "visitor": "Corea del Sur"}, {"code": "M029", "local": "Brasil", "visitor": "Haití"}, {"code": "M030", "local": "Escocia", "visitor": "Marruecos"}, {"code": "M031", "local": "Turquía", "visitor": "Paraguay"}, {"code": "M032", "local": "Estados Unidos", "visitor": "Australia"}, {"code": "M033", "local": "Alemania", "visitor": "Costa de Marfil"}, {"code": "M034", "local": "Ecuador", "visitor": "Curazao"}, {"code": "M035", "local": "Países Bajos", "visitor": "Suecia"}, {"code": "M036", "local": "Túnez", "visitor": "Japón"}, {"code": "M037", "local": "España", "visitor": "Arabia Saudita"}, {"code": "M038", "local": "Uruguay", "visitor": "Cabo Verde"}, {"code": "M039", "local": "Bélgica", "visitor": "Irán"}, {"code": "M040", "local": "Nueva Zelanda", "visitor": "Egipto"}, {"code": "M041", "local": "Francia", "visitor": "Iraq"}, {"code": "M042", "local": "Noruega", "visitor": "Senegal"}, {"code": "M043", "local": "Argentina", "visitor": "Austria"}, {"code": "M044", "local": "Jordania", "visitor": "Argelia"}, {"code": "M045", "local": "Inglaterra", "visitor": "Ghana"}, {"code": "M046", "local": "Panamá", "visitor": "Croacia"}, {"code": "M047", "local": "Portugal", "visitor": "Uzbekistán"}, {"code": "M048", "local": "Colombia", "visitor": "RD Congo"}, {"code": "M049", "local": "México", "visitor": "Chequia"}, {"code": "M050", "local": "Corea del Sur", "visitor": "Sudáfrica"}, {"code": "M051", "local": "Canadá", "visitor": "Suiza"}, {"code": "M052", "local": "Bosnia y Herzegovina", "visitor": "Qatar"}, {"code": "M053", "local": "Escocia", "visitor": "Brasil"}, {"code": "M054", "local": "Marruecos", "visitor": "Haití"}, {"code": "M055", "local": "Ecuador", "visitor": "Alemania"}, {"code": "M056", "local": "Curazao", "visitor": "Costa de Marfil"}, {"code": "M057", "local": "Túnez", "visitor": "Países Bajos"}, {"code": "M058", "local": "Japón", "visitor": "Suecia"}, {"code": "M059", "local": "Estados Unidos", "visitor": "Turquía"}, {"code": "M060", "local": "Paraguay", "visitor": "Australia"}, {"code": "M061", "local": "Noruega", "visitor": "Francia"}, {"code": "M062", "local": "Senegal", "visitor": "Iraq"}, {"code": "M063", "local": "Nueva Zelanda", "visitor": "Bélgica"}, {"code": "M064", "local": "Egipto", "visitor": "Irán"}, {"code": "M065", "local": "Uruguay", "visitor": "España"}, {"code": "M066", "local": "Cabo Verde", "visitor": "Arabia Saudita"}, {"code": "M067", "local": "Panamá", "visitor": "Inglaterra"}, {"code": "M068", "local": "Croacia", "visitor": "Ghana"}, {"code": "M069", "local": "Jordania", "visitor": "Argentina"}, {"code": "M070", "local": "Argelia", "visitor": "Austria"}, {"code": "M071", "local": "Colombia", "visitor": "Portugal"}, {"code": "M072", "local": "RD Congo", "visitor": "Uzbekistán"}, {"code": "M073", "local": "Sudáfrica", "visitor": "Canadá"}, {"code": "M074", "local": "Brasil", "visitor": "Japón"}, {"code": "M075", "local": "Alemania", "visitor": "Paraguay"}, {"code": "M076", "local": "Países Bajos", "visitor": "Marruecos"}, {"code": "M077", "local": "Costa de Marfil", "visitor": "Noruega"}, {"code": "M078", "local": "Francia", "visitor": "Suecia"}, {"code": "M079", "local": "México", "visitor": "Ecuador"}, {"code": "M080", "local": "Inglaterra", "visitor": "RD Congo"}, {"code": "M081", "local": "Bélgica", "visitor": "Senegal"}, {"code": "M082", "local": "Estados Unidos", "visitor": "Bosnia y Herzegovina"}, {"code": "M083", "local": "España", "visitor": "Austria"}, {"code": "M084", "local": "Portugal", "visitor": "Croacia"}, {"code": "M085", "local": "Suiza", "visitor": "Argelia"}, {"code": "M086", "local": "Australia", "visitor": "Egipto"}, {"code": "M087", "local": "Argentina", "visitor": "Cabo Verde"}, {"code": "M088", "local": "Colombia", "visitor": "Ghana"}], "players": [{"name": "Cesc", "predictions": "LLLLLVVVLELLLVLLLVLLLLLVLLLELVLLLLLVLLLVLELVLVLLLLVLVLVVVLELVLVLVLVLVVELVLLEVLELELLLLELL"}, {"name": "Ana Luz Lopez", "predictions": "LLLEEVVVLEVLLVLELVLELVLVELLELVEVLLLVLLLELLLELVLLLLELVLVEVLVLVEVEVEVLVEVEVLLVVLLLLLLVLVLL"}, {"name": "David Merlo", "predictions": "LLEVLVLELVVLLVLELVLELLLVEELLLLVLLLEVLLLELLLELVLLLELEVLVVVLELEEVVVVVEVELEVLLLVLLLVLLLVVLL"}, {"name": "Eduardo Luevano", "predictions": "LELVLLELLVLLLVLVLVLLLLLVLLLLLELELLEVLLLELLLVLVLLLEELVLEVVEVLLLVVEVVEVVLVVELLVLELLLLELVLL"}, {"name": "Irvin Ávila", "predictions": "LLLLLVVVLVLLLVLLLVLLLVLVLLLLLVVLLLLVLLLLLLLVLVLLLLLVVLVVVLLLVLVVEVVLVVVVLLLLVLLLLLLLLVLL"}, {"name": "Juan Ramirez", "predictions": "LLLLLVVVLVLLLVLLLVLLEVLVLLLLLVVLLLLVLLLLLLLVLVLLLLLVVLVVVLLLVLVVVVVLVVVVLLLLVLLLLLLLLLLL"}, {"name": "Max Rivera", "predictions": "LLLLVVVELVELLVEVLVLEEVLVELLELVLLLLLVLLLVLELELVLLLEELVLEVVLEEVEVLVVVEVVELVELLVLLLVLLLEELL"}, {"name": "Pedro Masó", "predictions": "LLLLLVEVLELELVLELVLLLELVVLLLLEELLLLELLLELVLVLVLLLLVEELEVLVEELLVEVVVLVVLVVLLLVLLLVLLLLVLL"}, {"name": "Jonathan Luna", "predictions": "LELLLVVVLVLLLVLLLVLLLLLVLLLLLVLLLLLVLLLVLELVLVLLLLVLVLVVVLLEVLVEVVVLVVEEVLLVVLLLLLLLLVLL"}, {"name": "Edder Ávila", "predictions": "LLLVLVVELVEELVLELVLELELVELELLVVLLLLVLLLVLLLELVLLLLEVVLVVELLLVEVEVVVLVELEVLLLVLLLLLLLLELL"}, {"name": "Cesar Raul", "predictions": "LLLLLVVVLEVELELVLELLLLLVVLEELVLLLLEVLLLVLVLVEVLLLLEVVLVVELELVVVLVEVVVEVLVLLVLLLLVLLLVVLL"}, {"name": "Eduardo Leil", "predictions": "LLELEVVVLVLLLVEVLVLEELLVEELLLVVLLLEVLLLELLLELVLLLLELELEEVEELEEVLVEVLVVLEVLLEVLLLELLEEVLL"}, {"name": "Ivette Braunschweiger", "predictions": "LVLLLVEVLVLELVELLVLLLELVLLLLLVLLLELVLLLELELVLVLLELVLVLVEVEELVLVEVVVLVEVVVELEVLLLELLLVVLL"}, {"name": "Diego Cuevas / Cach", "predictions": "LLLVLVVVLVLLLVLELVLLVELVLLLLLVLLLLLVLLLLLELVLVLLLLVLVLVVVVEVVLVVVVVLVLVLVVLVELLLELLEVVLL"}, {"name": "Valeria / Cris", "predictions": "LVELLVEELELLLVLELVLELLLVLEEELVEELEEVLLLELLLVLVLLLLEEVLVVVEEEVLVEEEVLVEEEVLLLVLLLLLLLLVLL"}, {"name": "Carlos Cuevas", "predictions": "LLLLVVLVLVLLLVLELVLLLLLVLLLLLVLELLLVLLLELVLVLVLLEEVVVLVVVELLVLVVVVVLVLVLVELLVLLLELLLLVLL"}, {"name": "Victor Zea", "predictions": "LELLLVEVLELLLVLLLVLLELLVLLLLLLLLLLLVLLLVLELELVLLLLVLVLVVVELEVLVLVEVLVLVLVLLEVLLLLLLEEVLL"}, {"name": "Guillermo Braucsch", "predictions": "LELLLVVVLELLLVLLLVLLEELVLLLLLVLLLLLVLLLVLELELVLLLLVLVLVVVEVEVLVEEVVEVVVEVELLVLLLELLLLELL"}, {"name": "Lalo Tocayo", "predictions": "LELLLVVVLEELLVLLLVLLLLLVLVLLLELLLLLELVLELELVLVLLLLELVLEVVLEEELVEELVLVEELVLLEVLLLELLELVLL"}, {"name": "Vero Vazquez", "predictions": "LLELLVELLELELVLELLLLVLEELVELVVLLELVLLLVEVLELLLLLLVVVLVVVELLVEVLVELVVEVVVVLLLLLLLLLLLLVLL"}]};
 
 // Map match code -> index
 const MATCH_INDEX = {};
@@ -794,8 +789,8 @@ const INITIAL_RESULTS = /*RESULTS_BEGIN*/{}/*RESULTS_END*/;
 // ============================================================
 // STATE
 // ============================================================
-const STORAGE_KEY = "quiniela_mundial_2026_results_v1";
-const EXPAND_KEY = "quiniela_mundial_2026_expanded_v1";
+const STORAGE_KEY = "quiniela_mundial_2026_results_v2";
+const EXPAND_KEY = "quiniela_mundial_2026_expanded_v2";
 
 let state = {
   view: "resumen",
@@ -1465,131 +1460,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // ----- WC2026 API — Auto-refresh results -----
-  const WC2026_API = "https://api.wc2026api.com/matches";
-  const WC2026_KEY = "wc26_2Scr7ZB3BNsMUgkh9G7MvR";
-  const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
-  let refreshTimer = null;
-  let lastRefreshTime = 0;
-  let isRefreshing = false;
-
-  function updateLiveStatus(text, color) {
-    const dot = document.getElementById("live-dot");
-    const txt = document.getElementById("live-text");
-    if (dot) dot.style.background = color || "#9ca3af";
-    if (txt) txt.textContent = text;
-  }
-
-  function timeAgo(ts) {
-    const sec = Math.floor((Date.now() - ts) / 1000);
-    if (sec < 60) return "hace " + sec + "s";
-    if (sec < 3600) return "hace " + Math.floor(sec/60) + " min";
-    return "hace " + Math.floor(sec/3600) + "h " + Math.floor((sec%3600)/60) + "min";
-  }
-
-  async function fetchWC2026Results(opts) {
-    opts = opts || {};
-    if (isRefreshing) return;
-    isRefreshing = true;
-    updateLiveStatus("Actualizando...", "#eab308");
-    try {
-      const resp = await fetch(WC2026_API, {
-        headers: {
-          "Authorization": "Bearer " + WC2026_KEY,
-          "Accept": "application/json"
-        }
-      });
-      if (!resp.ok) {
-        if (resp.status === 429) {
-          updateLiveStatus("Rate limit alcanzado, reintentando en 5 min", "#dc2626");
-          return;
-        }
-        throw new Error("HTTP " + resp.status);
-      }
-      const matches = await resp.json();
-      if (!Array.isArray(matches) || matches.length === 0) {
-        throw new Error("Respuesta vacía de la API");
-      }
-
-      let imported = 0, alreadyHad = 0, noScore = 0;
-
-      for (const m of matches) {
-        // Group stage + Round of 32 (M001-M088)
-        const num = m.match_number;
-        if (!num || num < 1 || num > 88) continue;
-
-        // Only completed matches
-        if (m.status !== "completed") { noScore++; continue; }
-        if (m.home_score == null || m.away_score == null) { noScore++; continue; }
-
-        const code = "M" + String(num).padStart(3, "0");
-        const hs = parseInt(m.home_score, 10);
-        const as = parseInt(m.away_score, 10);
-        const result = hs > as ? "L" : as > hs ? "V" : "E";
-
-        const existing = state.realResults[code];
-        if (existing === result) { alreadyHad++; continue; }
-
-        state.realResults[code] = result;
-        imported++;
-      }
-
-      if (imported > 0) {
-        saveResults();
-        render();
-      }
-
-      lastRefreshTime = Date.now();
-      const totalDone = Object.keys(state.realResults).filter(k =>
-        ["L","E","V"].includes(state.realResults[k])
-      ).length;
-
-      if (imported > 0) {
-        updateLiveStatus("✓ " + imported + " nuevos · " + totalDone + "/" + DATA.matches.length + " partidos · " + timeAgo(lastRefreshTime), "#16a34a");
-      } else {
-        updateLiveStatus("✓ Al día · " + totalDone + "/" + DATA.matches.length + " partidos · " + timeAgo(lastRefreshTime), "#16a34a");
-      }
-
-      return { imported, alreadyHad, noScore };
-    } catch (e) {
-      const msg = e.message || String(e);
-      if (msg.includes("Failed to fetch") || msg.includes("NetworkError")) {
-        updateLiveStatus("⚠️ Sin conexión o API no accesible desde file:// — subir a GitHub Pages", "#dc2626");
-      } else {
-        updateLiveStatus("⚠️ Error: " + msg, "#dc2626");
-      }
-      return null;
-    } finally {
-      isRefreshing = false;
-    }
-  }
-
-  // Manual refresh button
-  document.getElementById("auto-import").addEventListener("click", () => {
-    fetchWC2026Results();
-  });
-
-  // Auto-refresh: fetch now, then every 5 minutes
-  function startAutoRefresh() {
-    fetchWC2026Results();
-    if (refreshTimer) clearInterval(refreshTimer);
-    refreshTimer = setInterval(() => {
-      fetchWC2026Results();
-      // Also update the "time ago" display between fetches
-    }, REFRESH_INTERVAL);
-    // Update time-ago label every 30 seconds
-    setInterval(() => {
-      if (lastRefreshTime && !isRefreshing) {
-        const totalDone = Object.keys(state.realResults).filter(k =>
-          ["L","E","V"].includes(state.realResults[k])
-        ).length;
-        updateLiveStatus("✓ Al día · " + totalDone + "/" + DATA.matches.length + " partidos · " + timeAgo(lastRefreshTime), "#16a34a");
-      }
-    }, 30000);
-  }
-
-  // Start auto-refresh after a short delay (let initial render finish)
-  setTimeout(startAutoRefresh, 500);
+  // (Auto-importación desactivada: causaba resultados incorrectos por desalineación con el bracket personalizado)
 
   render();
 });
